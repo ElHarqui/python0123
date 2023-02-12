@@ -5,6 +5,9 @@ import db
 message="""
     1)Insertar data:
     2)Actualizar data del dolar
+    3)Mostrar grafica
+    
+    0)Cerrar
 """
 print(message) 
 
@@ -38,6 +41,12 @@ def updateDolar():
     dfinter =pd.read_csv("python0123//project/dolarhistory.csv",sep = ";")
     dfinter = dfinter.tail(1)
     print(dfinter)#*Imprimiendo tabla con la nueva data guardada 
+    print("Se actualizo la data del dolar")
+def graficDolar():
+    import matplotlib.pyplot as plt
+    dfinter =pd.read_csv("python0123//project/dolarhistory.csv",sep = ";")
+    plt.plot(dfinter['dolar_fecha'],dfinter['dolar_venta'])
+    plt.show()
 
 while True: 
     try:
@@ -46,9 +55,14 @@ while True:
             a = int(a)
         if a == 1 :
             insertData()
-            break
+            #break
         elif a == 2 :
             updateDolar()
+            #break
+        elif a == 3 :
+            graficDolar()
+            #break
+        elif a == 0 :
             break
         else:
             print("ERROR. INTENTE DENUEVO")
