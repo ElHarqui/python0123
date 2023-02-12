@@ -14,14 +14,15 @@ print(message)
 def insertData():
     #obtiene la ruta absoluta
     path_=os.getcwd()+'\python0123\project\dataTienda.csv'
+    
     #conection a bd
-    conn=db.Conection('tienda.db')
+    conn=db.Conection(path_)
     cursor=conn.getCursor()
     print(path_)
     df = pd. read_csv (path_, sep = ";") 
     ### logica para insertar 
     for i,fila in df.iterrows():
-        print(fila['ORDER_ID'])
+        print(fila['NAME'])
 
 def updateDolar():
     import requests
@@ -33,15 +34,16 @@ def updateDolar():
     data_compra = data["compra"]
     data_fecha = data["fecha"]  #*Importando  data del dolar
 
-
     df = pd.DataFrame({'dolar_venta': [data_venta],'dolar_compra' : [data_compra],'dolar_fecha' : [data_fecha]})
+    print(df)
     df.to_csv("python0123//project/dolarhistory.csv",";",mode="a",header=False,index= False) 
     #print(df) #*Actualizando data del dolar
 
     dfinter =pd.read_csv("python0123//project/dolarhistory.csv",sep = ";")
-    dfinter = dfinter.tail(1)
+    dfinter = dfinter.tail()
     print(dfinter)#*Imprimiendo tabla con la nueva data guardada 
     print("Se actualizo la data del dolar")
+
 def graficDolar():
     import matplotlib.pyplot as plt
     dfinter =pd.read_csv("python0123//project/dolarhistory.csv",sep = ";")
