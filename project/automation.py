@@ -1,17 +1,16 @@
 import pandas as pd
 import os
 import db
+
 message="""
     1)Insertar data:
     2)Actualizar data del dolar
 """
-print(message)
-a=int(input('ingrese la tarea a realizar: '))
-
+print(message) 
 
 def insertData():
     #obtiene la ruta absoluta
-    path_=os.getcwd()+'\dataTienda.csv'
+    path_=os.getcwd()+'\python0123\project\dataTienda.csv'
     #conection a bd
     conn=db.Conection('tienda.db')
     cursor=conn.getCursor()
@@ -22,5 +21,36 @@ def insertData():
         print(fila['ORDER_ID'])
 
 def updateDolar():
+    import requests
+    from lxml import html
     url = 'https://api.apis.net.pe/v1/tipo-cambio-sunat' #tipo cambio sunat
-    pass
+    response = requests.get(url)
+    data = response.json()
+    data_venta = data["venta"]
+    data_compra = data["compra"]
+    data_fecha = data["fecha"]  #*Importando  data del dolar
+
+
+    df = pd.DataFrame({'dolar_venta': [data_venta],'dolar_compra' : [data_compra],'dolar_fecha' : [data_fecha]})
+    df.to_csv("python0123//project/dolarhistory.csv",";",mode="a",header=False,index= False) 
+    #print(df) #*Actualizando data del dolar
+
+    dfinter =pd.read_csv("python0123//project/dolarhistory.csv",sep = ";")
+    dfinter = dfinter.tail(1)
+    print(dfinter)#*Imprimiendo tabla con la nueva data guardada 
+
+while True: 
+    try:
+        a=input('ingrese la tarea a realizar: ')
+        if a.isnumeric : 
+            a = int(a)
+        if a == 1 :
+            insertData()
+            break
+        elif a == 2 :
+            updateDolar()
+            break
+        else:
+            print("ERROR. INTENTE DENUEVO")
+    except Exception as a:
+        print(a)
